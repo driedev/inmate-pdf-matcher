@@ -1,0 +1,170 @@
+Build a full-stack Node.js + React web application called "Inmate PDF Matcher".
+
+GOAL:
+The system must:
+
+1) Scrape two dynamic inmate roster websites:
+   - https://www.madisoncountysheriffal.org/inmate-roster
+   - https://limestone-al-911.zuercherportal.com/#/inmates
+
+Extract:
+- Full name
+- Photo URL
+- Any available booking ID or identifier
+
+Use Playwright for scraping (headless).
+
+Store results in:
+backend/data/inmates.json
+
+--------------------------------------------------
+
+2) PDF Processing Pipeline
+
+Accept PDF uploads.
+
+Use pdf-parse to extract text.
+
+Extract names from PDF using:
+- Regex
+- Normalization (uppercase, remove commas, trim)
+- Prepare for fuzzy matching
+
+--------------------------------------------------
+
+3) Name Matching
+
+Use Fuse.js for fuzzy matching.
+
+Match PDF names against scraped roster names.
+
+If similarity threshold >= 0.7:
+- Flag as MATCH
+- Store confidence score
+
+--------------------------------------------------
+
+4) Document Type Detection (OpenAI)
+
+Use OpenAI API (via environment variable OPENAI_API_KEY).
+
+Create a function:
+
+detectDocumentType(text)
+
+Prompt the model to classify document as:
+- Booking Summary
+- Court Docket Notice
+- Crash Report
+- Unknown
+
+Return JSON:
+{
+  type: string,
+  confidence: number
+}
+
+If confidence < 0.7:
+- Mark as "Needs Review"
+
+--------------------------------------------------
+
+5) Email Alert System (Gmail)
+
+Use Nodemailer.
+
+Environment variables:
+GMAIL_USER
+GMAIL_APP_PASSWORD
+ALERT_EMAIL
+
+When a match is found:
+Send an email with:
+- PDF Name
+- Matched Roster Name
+- Photo URL
+- Match Confidence
+- Document Type
+
+Do NOT log secrets.
+
+--------------------------------------------------
+
+6) Web Review Dashboard (React Frontend)
+
+Frontend must:
+
+- Upload PDF
+- Display extracted text
+- Highlight matched names
+- Show matched inmate photo beside the name
+- Show document type + confidence
+- Show match confidence
+- Show "Needs Review" badge if low confidence
+
+--------------------------------------------------
+
+7) Backend API Routes
+
+POST /upload
+- Accept PDF
+- Extract text
+- Detect document type
+- Extract names
+- Match names
+- Send email if match
+- Return structured JSON
+
+GET /scrape
+- Trigger scraping
+- Refresh inmates.json
+
+--------------------------------------------------
+
+8) Security Requirements
+
+- Use dotenv
+- Include .env.example
+- Do NOT hardcode secrets
+- Add .gitignore
+- Do not log API keys
+- Validate uploaded files (PDF only)
+
+--------------------------------------------------
+
+9) Project Structure
+
+/backend
+  /src
+    /scraper
+    /pdf
+    /matcher
+    /email
+    server.ts
+  /data
+  .env.example
+
+/frontend
+  React app (Vite)
+
+--------------------------------------------------
+
+10) Code Quality
+
+- Use async/await
+- Add try/catch blocks
+- Return proper error responses
+- Modularize code
+- Add comments explaining reasoning
+
+--------------------------------------------------
+
+11) Include a professional README.md explaining:
+- Architecture
+- Matching logic
+- OpenAI prompting strategy
+- Handling uncertainty
+- Security decisions
+- Scaling considerations
+
+Build this as a production-quality technical assessment submission.
