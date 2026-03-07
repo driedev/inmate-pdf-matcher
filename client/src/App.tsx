@@ -7,12 +7,16 @@ import NotFound from "@/pages/not-found";
 
 import Dashboard from "@/pages/Dashboard";
 import Inmates from "@/pages/Inmates";
+import ReviewQueue from "@/pages/ReviewQueue";
+import Settings from "@/pages/Settings";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard}/>
       <Route path="/inmates" component={Inmates}/>
+      <Route path="/review" component={ReviewQueue}/>
+      <Route path="/settings" component={Settings}/>
       <Route component={NotFound} />
     </Switch>
   );
