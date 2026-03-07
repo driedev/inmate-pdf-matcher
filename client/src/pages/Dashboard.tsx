@@ -24,109 +24,137 @@ export default function Dashboard() {
   return (
     <MainLayout>
       <div className="space-y-8 max-w-5xl mx-auto">
-        <header>
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Document Processing</h1>
-          <p className="text-muted-foreground mt-2 text-lg">Upload arrest records or court documents to instantly match entities against the active roster.</p>
-        </header>
+        <motion.header
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+            Document <span className="gradient-text">Processing</span>
+          </h1>
+          <p className="text-muted-foreground mt-4 text-xl max-w-2xl leading-relaxed">
+            Upload arrest records or court documents to instantly match entities against the active roster using AI-powered intelligence.
+          </p>
+        </motion.header>
 
-        <section>
-          <PdfUploader 
-            onUpload={handleUpload} 
-            isUploading={uploadMutation.isPending} 
-          />
-        </section>
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="glass-card rounded-[2.5rem] p-1 shadow-2xl shadow-primary/5">
+            <PdfUploader 
+              onUpload={handleUpload} 
+              isUploading={uploadMutation.isPending} 
+            />
+          </div>
+        </motion.section>
 
         <AnimatePresence mode="wait">
           {result && (
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-8 pb-12"
             >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="col-span-1 md:col-span-2 shadow-sm rounded-3xl overflow-hidden border-slate-200 dark:border-slate-800">
-                  <CardHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <Card className="lg:col-span-2 glass-card border-none shadow-2xl rounded-[2rem] overflow-hidden">
+                  <CardHeader className="bg-primary/5 dark:bg-primary/10 border-b border-primary/10 pb-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Database className="w-5 h-5 text-primary" />
-                        <CardTitle className="text-xl">Identified Entities</CardTitle>
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-primary/20 rounded-xl text-primary">
+                          <Database className="w-6 h-6" />
+                        </div>
+                        <CardTitle className="text-2xl">Identified Entities</CardTitle>
                       </div>
-                      <Badge variant="secondary" className="font-semibold rounded-lg bg-primary/10 text-primary">
-                        {result.matches.length} Found
+                      <Badge variant="secondary" className="px-4 py-1.5 text-sm font-bold rounded-full bg-primary/20 text-primary border-none">
+                        {result.matches.length} Results
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-6 bg-slate-50/20 dark:bg-slate-950/20">
+                  <CardContent className="p-8">
                     {result.matches.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-6">
                         {result.matches.map((match, i) => (
-                          <MatchResultCard key={i} match={match} index={i} />
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 }}
+                          >
+                            <MatchResultCard match={match} index={i} />
+                          </motion.div>
                         ))}
                       </div>
                     ) : (
-                      <div className="py-12 flex flex-col items-center justify-center text-center">
-                        <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
-                          <User className="w-8 h-8 text-slate-400" />
+                      <div className="py-20 flex flex-col items-center justify-center text-center">
+                        <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6">
+                          <ShieldAlert className="w-10 h-10 text-slate-400" />
                         </div>
-                        <h4 className="text-lg font-bold text-slate-700 dark:text-slate-300">No Entities Found</h4>
-                        <p className="text-slate-500 max-w-sm mt-1">We couldn't extract any identifiable names from this document.</p>
+                        <h4 className="text-2xl font-bold text-foreground">No Entities Found</h4>
+                        <p className="text-muted-foreground max-w-sm mt-2 text-lg">We couldn't extract any identifiable names from this document.</p>
                       </div>
                     )}
                   </CardContent>
                 </Card>
 
-                <div className="space-y-6">
-                  <Card className="shadow-sm rounded-3xl overflow-hidden border-slate-200 dark:border-slate-800">
-                    <CardHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 pb-4">
-                      <div className="flex items-center gap-2">
-                        <BarChart3 className="w-5 h-5 text-primary" />
-                        <CardTitle className="text-xl">Analysis</CardTitle>
+                <div className="space-y-8">
+                  <Card className="glass-card border-none shadow-2xl rounded-[2rem] overflow-hidden">
+                    <CardHeader className="bg-indigo-500/5 dark:bg-indigo-500/10 border-b border-indigo-500/10 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-indigo-500/20 rounded-xl text-indigo-500">
+                          <BarChart3 className="w-6 h-6" />
+                        </div>
+                        <CardTitle className="text-2xl">Analysis</CardTitle>
                       </div>
                     </CardHeader>
-                    <CardContent className="p-6 space-y-6">
+                    <CardContent className="p-8 space-y-8">
                       <div>
-                        <p className="text-sm font-medium text-slate-500 mb-1">Document Type</p>
-                        <p className="text-base font-bold text-foreground capitalize flex items-center gap-2">
-                          {result.documentType}
-                          <Badge variant="outline" className="text-xs font-mono">{Math.round(result.typeConfidence)}%</Badge>
-                        </p>
+                        <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">Document Type</p>
+                        <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                          <span className="text-lg font-bold text-foreground capitalize">{result.documentType}</span>
+                          <Badge variant="outline" className="px-3 py-1 font-mono text-primary border-primary/20 bg-primary/5">{Math.round(result.typeConfidence * 100)}%</Badge>
+                        </div>
                       </div>
                       
-                      <Separator />
+                      <Separator className="opacity-50" />
                       
                       <div>
-                        <p className="text-sm font-medium text-slate-500 mb-2">Review Status</p>
+                        <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Review Status</p>
                         {result.needsReview ? (
-                          <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-500 p-3 rounded-xl border border-amber-200 dark:border-amber-900/50">
-                            <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5" />
+                          <div className="flex items-start gap-4 bg-amber-500/10 text-amber-700 dark:text-amber-400 p-5 rounded-2xl border border-amber-500/20 shadow-lg shadow-amber-500/5">
+                            <ShieldAlert className="w-6 h-6 shrink-0 mt-0.5" />
                             <div className="text-sm">
-                              <p className="font-bold">Manual Review Required</p>
-                              <p className="opacity-90 mt-0.5 leading-tight">Confidence thresholds were not met for all extractions.</p>
+                              <p className="font-bold text-base mb-1">Manual Review Required</p>
+                              <p className="opacity-80 leading-relaxed">Confidence thresholds were not met for all extractions.</p>
                             </div>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-500 p-3 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
-                            <CheckCircle className="w-5 h-5 shrink-0" />
-                            <p className="text-sm font-bold">Auto-Processed Successfully</p>
+                          <div className="flex items-center gap-4 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 p-5 rounded-2xl border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
+                            <CheckCircle className="w-6 h-6 shrink-0" />
+                            <p className="text-base font-bold">Auto-Processed Successfully</p>
                           </div>
                         )}
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="shadow-sm rounded-3xl overflow-hidden border-slate-200 dark:border-slate-800 flex flex-col h-[320px]">
-                    <CardHeader className="bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 pb-4 shrink-0">
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-primary" />
-                        <CardTitle className="text-xl">Raw Text</CardTitle>
+                  <Card className="glass-card border-none shadow-2xl rounded-[2rem] overflow-hidden flex flex-col h-[400px]">
+                    <CardHeader className="bg-slate-500/5 dark:bg-slate-500/10 border-b border-slate-500/10 pb-6 shrink-0">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-slate-500/20 rounded-xl text-slate-500">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <CardTitle className="text-2xl">Raw Text</CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent className="p-0 flex-1 overflow-hidden">
                       <ScrollArea className="h-full w-full">
-                        <div className="p-6">
-                          <p className="font-mono text-xs text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-relaxed">
+                        <div className="p-8">
+                          <p className="font-mono text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
                             {result.extractedText}
                           </p>
                         </div>

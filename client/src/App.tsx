@@ -10,6 +10,8 @@ import Inmates from "@/pages/Inmates";
 import ReviewQueue from "@/pages/ReviewQueue";
 import Settings from "@/pages/Settings";
 
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 function Router() {
   return (
     <Switch>
@@ -25,10 +27,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Router />
-        <Toaster />
-      </TooltipProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="justice-match-theme">
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
